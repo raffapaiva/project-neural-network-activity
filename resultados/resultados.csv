@@ -1,0 +1,3 @@
+modelo,arquitetura,loss,acc,params,n_treino,n_teste
+referencia,5 ReLU -> 5 tanh -> 1 sigmoid,0.012632781639695168,0.9800000190734863,51,400,100
+proposto,16 ReLU -> 8 ReLU -> 4 tanh -> 1 sigmoid,0.010526040568947792,0.9900000095367432,225,400,100

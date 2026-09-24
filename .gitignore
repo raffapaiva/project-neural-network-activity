@@ -1,0 +1,20 @@
+# venv
+.venv/
+venv/
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# jupyter
+.ipynb_checkpoints/
+
+# keras / tf
+*.h5
+*.keras
+*.ckpt
+*.pb
+
+# so / logs
+*.log
