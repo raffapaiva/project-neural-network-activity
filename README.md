@@ -1,5 +1,13 @@
 # Trabalho - Redes Neurais (make_moons)
 
+## Integrantes
+
+- Evelin Limeira
+- João Vítor Araújo
+- Jade Colpani
+- Clayton Liberato
+- Raffael Paiva
+
 Compara a rede Keras do `exemplo4.py` da aula com uma versao maior
 (mais neuronios, uma camada oculta a mais) num problema de
 classificacao nao linear (`make_moons`, 500 amostras, ruido 0.20).
