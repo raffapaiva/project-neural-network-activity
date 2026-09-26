@@ -1,12 +1,12 @@
 # Resultados - Redes Neurais (make_moons)
 
 Gerado automaticamente por `src/trabalho_rede_neural.py` em 23/09/2026 21:59 Hora oficial do Brasil.
-TensorFlow 2.22.0-rc0 / Keras 3.16.0.dev2026092318 (CPU - versoes diferentes podem variar ~1pp mesmo com seed fixa).
+TensorFlow 2.22.0-rc0 / Keras 3.16.0.dev2026092318 (CPU - versões diferentes podem variar ~1pp mesmo com seed fixa).
 
 ## Objetivo
 
-Ver como mudar numero de neuronios, numero de camadas e funcoes de
-ativacao da rede do `exemplo4.py` afeta a classificacao nao linear das
+Ver como mudar numero de neurônios, numero de camadas e funções de
+ativação da rede do `exemplo4.py` afeta a classificação não linear das
 duas luas (`make_moons`).
 
 ## Parametros (src/config.py)
@@ -18,15 +18,15 @@ duas luas (`make_moons`).
 
 | Aspecto | Referencia (exemplo4.py) | Proposto |
 |---|---|---|
-| Camadas ocultas | 2 (5 + 5 neuronios) | 3 (16 + 8 + 4 neuronios) |
-| Ativacoes ocultas | ReLU, tanh | ReLU, ReLU, tanh |
-| Saida | 1 sigmoid (binaria) | 1 sigmoid (binaria) |
-| Parametros treinaveis | 51 | 225 (~4.4x mais) |
+| Camadas ocultas | 2 (5 + 5 neurônios) | 3 (16 + 8 + 4 neurônios) |
+| Ativações ocultas | ReLU, tanh | ReLU, ReLU, tanh |
+| Saída | 1 sigmoid (binária) | 1 sigmoid (binaria) |
+| Parâmetros treináveis | 51 | 225 (~4.4x mais) |
 
-A unica mudanca proposital e a capacidade da rede: mais neuronios, uma
+A única mudança proposital e a capacidade da rede: mais neurônios, uma
 camada oculta a mais e ReLU nas duas primeiras camadas. Otimizador,
-loss, taxa de aprendizado, epocas e dados sao identicos, entao qualquer
-diferenca de desempenho vem da arquitetura.
+loss, taxa de aprendizado, épocas e dados são idênticos, então qualquer
+diferença de desempenho vem da arquitetura.
 
 ## Base usada
 
@@ -34,26 +34,26 @@ diferenca de desempenho vem da arquitetura.
 
 ## Tabela de resultados (teste)
 
-| Modelo | Arquitetura | Params | Loss teste | Acuracia teste |
+| Modelo | Arquitetura | Params | Loss teste | Acurácia teste |
 |---|---|---:|---:|---:|
 | Referencia | 5 ReLU -> 5 tanh -> 1 sigmoid | 51 | 0.012633 | 98.00% |
 | Proposto | 16 ReLU -> 8 ReLU -> 4 tanh -> 1 sigmoid | 225 | 0.010526 | 99.00% |
 
-O modelo proposto ficou 1.00 ponto(s) percentual(is) acima em acuracia.
+O modelo proposto ficou 1.00 ponto(s) percentual(is) acima em acurácia.
 
-## Convergencia (calculado do historico, nao "no olho")
+## Convergência (calculado do historico, nao "no olho")
 
-| Metrica | Referencia | Proposto |
+| Métrica | Referencia | Proposto |
 |---|---|---|
-| 1a epoca com loss de teste <= 0.02 | 95 | 46 |
-| 1a epoca com acuracia de teste >= 95% | 58 | 24 |
+| 1a época com loss de teste <= 0.02 | 95 | 46 |
+| 1a época com acurácia de teste >= 95% | 58 | 24 |
 | Loss final treino / teste | 0.0164 / 0.0126 | 0.0132 / 0.0105 |
 | Menor loss de teste no treino | 0.0126 | 0.0098 |
 
-O modelo maior converge cerca de 2x mais rapido (atinge o patamar de
-loss com metade das epocas), o esperado para uma rede com mais
-parametros sob o mesmo SGD. Em nenhum dos dois a loss de teste termina
-acima da de treino, entao nao ha sinal de overfitting.
+O modelo maior converge cerca de 2x mais rápido (atinge o patamar de
+loss com metade das épocas), o esperado para uma rede com mais
+parâmetros sob o mesmo SGD. Em nenhum dos dois a loss de teste termina
+acima da de treino, então não há sinais de overfitting.
 
 ### Curvas - referencia
 
@@ -67,7 +67,7 @@ acima da de treino, entao nao ha sinal de overfitting.
 
 ![Acuracia proposto](../figuras/03_modelo_proposto_acuracia.png)
 
-## Fronteiras de decisao
+## Fronteiras de decisão
 
 ### Referencia
 
@@ -77,21 +77,21 @@ acima da de treino, entao nao ha sinal de overfitting.
 
 ![Fronteira proposto](../figuras/05_fronteira_modelo_proposto.png)
 
-As duas fronteiras acompanham o formato das luas. A diferenca aparece
+As duas fronteiras acompanham o formato das luas. A diferença aparece
 perto do cruzamento entre as classes (x0 entre -0.5 e 0), onde o modelo
-proposto faz uma transicao mais abrupta - provavelmente ai que se
-concentra a diferenca de acuracia.
+proposto faz uma transição mais abrupta - provavelmente ai que se
+concentra a diferença de acurácia.
 
-## Conclusao
+## Conclusão
 
-Rede maior converge mais rapido, mas nao garante acuracia melhor: neste
-run a diferenca foi de 1 ponto(s) percentual(is) em 100 amostras de
-teste. Para este problema e este nivel de ruido, a rede simples do
-exemplo da aula ja e suficiente - capacidade extra so deixa o modelo um
-pouco mais sensivel ao ruido perto da fronteira.
+Rede maior converge mais rápido, mas não garante acurácia melhor: neste
+run a diferença foi de 1 ponto(s) percentual(is) em 100 amostras de
+teste. Para este problema e este nível de ruído, a rede simples do
+exemplo da aula já e suficiente - capacidade extra somente deixa o modelo um
+pouco mais sensível ao ruído perto da fronteira.
 
 ## Arquivos brutos
 
 - `resultados.csv` - mesma tabela em CSV
-- `historico_referencia.csv` / `historico_proposto.csv` - loss/acc por epoca (auditoria da tabela acima)
+- `historico_referencia.csv` / `historico_proposto.csv` - loss/acc por época (auditoria da tabela acima)
 - `../modelos/referencia.keras` / `../modelos/proposto.keras` - pesos salvos

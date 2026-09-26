@@ -15,15 +15,15 @@ classificacao nao linear (`make_moons`, 500 amostras, ruido 0.20).
 ## Estrutura
 
 ```
-src/                        codigo (config, dados, modelos, visualizacao, trabalho_rede_neural)
+src/                        código (config, dados, modelos, visualização, trabalho_rede_neural)
 figuras/                    7 PNGs gerados pelo script
 modelos/                    pesos salvos (referencia.keras, proposto.keras)
-resultados/                 RESULTADOS.md (auto-gerado) + resultados.csv + historicos por epoca
+resultados/                 RESULTADOS.md (auto-gerado) + resultados.csv + históricos por época
 notebooks/                  trabalho_rede_neural.ipynb (demo) + exemplos_aula/exemplo4.py (baseline)
-docs/                       roteiro_trabalho_rede_neural.md (relatorio conceitual)
-legado/                     trabalho_rede_neural_original.py (versao anterior, raiz)
-test_fundacao.py            smoke test (shapes, params, 1 epoca)
-requirements.txt            dependencias (>= flexivel)
+docs/                       roteiro_trabalho_rede_neural.md (relatório conceitual)
+legado/                     trabalho_rede_neural_original.py (versão anterior, raiz)
+test_fundacao.py            smoke test (shapes, params, 1 época)
+requirements.txt            dependências (>= flexível)
 ```
 
 ## Ambiente
@@ -46,7 +46,7 @@ Saidas: `figuras/` (7 PNGs), `modelos/` (*.keras),
 
 ## Nota sobre reprodutibilidade
 
-Seed fixa (`SEED=42`, split 80/20 estratificado), mas versoes
-diferentes de TensorFlow/CPU (oneDNN) podem variar ~1pp de acuracia
-entre runs. O `resultados/RESULTADOS.md` de cada run registra a versao
-exata usada e e a fonte oficial dos numeros — nao o texto do `docs/`.
+Seed fixa (`SEED=42`, split 80/20 estratificado), mas versões
+diferentes de TensorFlow/CPU (oneDNN) podem variar ~1pp de acurácia
+entre runs. O `resultados/RESULTADOS.md` de cada run registra a versão
+exata usada e a fonte oficial dos números — não o texto do `docs/`.

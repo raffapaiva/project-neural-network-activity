@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redes Neurais — Referência vs Proposto (5 min)</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --accent:#38bdf8; --accent2:#f472b6;
+    --text:#f1f5f9; --muted:#94a3b8; --ok:#22c55e; --warn:#f59e0b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,Arial,sans-serif}
+  .deck{max-width:1000px;margin:0 auto;padding:24px 20px 80px}
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+  .topbar .pill{background:#0b1220;border:1px solid #334155;border-radius:999px;padding:6px 14px;font-size:13px;color:var(--muted)}
+  .topbar .pill b{color:var(--accent)}
+  .controls{display:flex;gap:8px}
+  button{background:var(--card);color:var(--text);border:1px solid #334155;border-radius:10px;padding:8px 14px;cursor:pointer;font-size:14px}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);color:#06202e;border:none;font-weight:700}
+  .slide{display:none;background:linear-gradient(180deg,#16213a,#111c30);border:1px solid #334155;border-radius:18px;padding:36px 38px;min-height:480px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .slide.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .kicker{color:var(--accent);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:12px;margin-bottom:10px}
+  h1{font-size:42px;line-height:1.05;margin:0 0 12px}
+  h2{font-size:30px;margin:0 0 14px}
+  h2 .hl{color:var(--accent)}
+  p,li{font-size:18px;line-height:1.55}
+  .muted{color:var(--muted)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:760px){.grid2{grid-template-columns:1fr}h1{font-size:32px}.slide{padding:24px}}
+  .card{background:rgba(255,255,255,.04);border:1px solid #334155;border-radius:14px;padding:16px 18px}
+  .card.ref{border-top:4px solid var(--muted)}
+  .card.prop{border-top:4px solid var(--accent)}
+  .card h3{margin:0 0 8px;font-size:19px}
+  code{background:#0b1220;border:1px solid #334155;border-radius:6px;padding:1px 7px;font-size:.9em;color:#bae6fd}
+  table{width:100%;border-collapse:collapse;font-size:16px;margin-top:12px}
+  th,td{border:1px solid #334155;padding:9px 10px;text-align:left}
+  th{background:#0b1220;color:var(--accent)}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .badge{display:inline-block;border-radius:999px;padding:3px 12px;font-size:13px;font-weight:700}
+  .badge.ok{background:rgba(34,197,94,.15);color:#86efac;border:1px solid #22c55e}
+  .badge.info{background:rgba(56,189,248,.15);color:#7dd3fc;border:1px solid var(--accent)}
+  .badge.warn{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid var(--warn)}
+  .why{display:grid;gap:10px;margin-top:12px}
+  .why .item{display:flex;gap:12px;background:rgba(255,255,255,.03);border:1px solid #334155;border-radius:12px;padding:12px 14px}
+  .why .n{flex:0 0 34px;height:34px;border-radius:50%;background:var(--accent);color:#06202e;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .imgs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+  .imgs figure{margin:0;background:#0b1220;border:1px solid #334155;border-radius:12px;padding:8px}
+  .imgs img{width:100%;border-radius:8px;display:block;background:#fff}
+  .imgs figcaption{font-size:13px;color:var(--muted);padding:6px 4px 2px;text-align:center}
+  .timer{font-variant-numeric:tabular-nums}
+  .notes{margin-top:14px;background:#0b1220;border:1px dashed #475569;border-radius:12px;padding:12px 14px;font-size:15px;color:#cbd5e1}
+  .notes b{color:var(--warn)}
+  .dots{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+  .dot{width:12px;height:12px;border-radius:50%;background:#334155;cursor:pointer;border:none;padding:0}
+  .dot.on{background:var(--accent)}
+  .footer{margin-top:14px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px}
+  kbd{background:#0b1220;border:1px solid #475569;border-radius:6px;padding:2px 8px;font-size:13px}
+  @media print{.topbar,.dots,.footer .nav{display:none}.slide{display:block!important;break-inside:avoid;margin-bottom:16px;min-height:auto}}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <div class="topbar">
+    <div class="pill">🎓 Apresentação de aula · <b>até 5 min</b> · <span class="timer" id="clock">00:00</span></div>
+    <div class="controls">
+      <button id="prev">← Anterior</button>
+      <button id="next" class="primary">Próximo →</button>
+    </div>
+  </div>
+
+  <!-- 1 CAPA -->
+  <section class="slide active">
+    <div class="kicker">Trabalho · Redes Neurais Artificiais · make_moons</div>
+    <h1>Referência <span style="color:var(--accent)">vs</span> Proposto:<br>o que mudou, o que é novo e <span style="color:var(--accent2)">por quê</span></h1>
+    <p class="muted">Baseado no <code>exemplo4.py</code> da aula (parte Keras). Comparação justa: mesmos dados, mesmo otimizador e mesmo treino — <b style="color:#fff">só a arquitetura muda</b>.</p>
+    <div class="grid2">
+      <div class="card ref"><h3>📦 Referência</h3><p><code>5 ReLU → 5 tanh → 1 sigmoid</code><br><span class="muted">51 parâmetros · SGD lr=0.1 · MSE</span></p></div>
+      <div class="card prop"><h3>🚀 Proposto</h3><p><code>16 ReLU → 8 ReLU → 4 tanh → 1 sigmoid</code><br><span class="muted">225 parâmetros (~4,4×) · mesmo SGD/MSE</span></p></div>
+    </div>
+    <div class="notes"><b>🎤 Fala (~40s):</b> "O trabalho pega a rede Keras do exemplo 4 e pergunta: o que acontece se eu der mais capacidade a ela — mais neurônios e mais uma camada — num problema mais difícil? Tudo o resto foi congelado de propósito, para a diferença vir só da arquitetura."</div>
+    <div class="footer"><span>1 / 7 · Capa</span><span><kbd>←</kbd> <kbd>→</kbd> ou <kbd>Espaço</kbd> para navegar</span></div>
+  </section>
+
+  <!-- 2 REFERENCIA -->
+  <section class="slide">
+    <div class="kicker">Slide 2 · Ponto de partida</div>
+    <h2>A referência: <span class="hl">exemplo4.py</span></h2>
+    <div class="grid2">
+      <div class="card ref">
+        <h3>📊 Dados originais</h3>
+        <ul>
+          <li><code>make_moons(100, noise=0.1)</code> — poucas amostras, pouco ruído</li>
+          <li><b>Sem divisão treino/teste:</b> treina e avalia nos mesmos 100 pontos</li>
+        </ul>
+      </div>
+      <div class="card ref">
+        <h3>🧠 Rede + treino originais</h3>
+        <ul>
+          <li><code>Dense(5, relu) → Dense(5, tanh) → Dense(1, sigmoid)</code></li>
+          <li><code>SGD(lr=0.1)</code> + <code>mean_squared_error</code></li>
+          <li>100 épocas · batch 5</li>
+        </ul>
+      </div>
+    </div>
+    <div class="notes"><b>🎤 Fala (~40s):</b> "A referência é simples de propósito: 100 pontos fáceis e avaliação otimista, porque testa no que treinou. Guarde três coisas: arquitetura 5+5, SGD 0.1 com erro quadrático, e 100 épocas. É isso que vamos alterar — e o que vamos manter."</div>
+    <div class="footer"><span>2 / 7 · Referência</span><span>exemplo4.py linhas 9 e 156–163</span></div>
+  </section>
+
+  <!-- 3 O QUE MUDOU -->
+  <section class="slide">
+    <div class="kicker">Slide 3 · O novo (visão geral)</div>
+    <h2>O que mudou? <span class="hl">3 grupos</span></h2>
+    <table>
+      <tr><th>Aspecto</th><th>Referência</th><th>Proposto (novo)</th></tr>
+      <tr><td>📊 Dados</td><td>100 amostras · ruído 0.10 · sem split</td><td><b>500 amostras · ruído 0.20 · split 80/20 estratificado</b> (400/100, seed 42)</td></tr>
+      <tr><td>⚙️ Treino</td><td>100 épocas · batch 5</td><td><b>200 épocas · batch 10</b> · <span class="badge info">SGD / MSE / lr 0.1 mantidos</span></td></tr>
+      <tr><td>🧠 Arquitetura</td><td>5 ReLU → 5 tanh → 1 sigmoid (51 params)</td><td><b>16 ReLU → 8 ReLU → 4 tanh → 1 sigmoid</b> (225 params)</td></tr>
+    </table>
+    <p class="muted">Regra do experimento: <b style="color:#fff">otimizador, loss, lr, dados e seed idênticos</b> para os dois modelos — arquivo <code>src/config.py</code> é a fonte única da verdade.</p>
+    <div class="notes"><b>🎤 Fala (~45s):</b> "Foram três grupos de mudança: dados mais difíceis, treino um pouco mais longo, e a rede maior. E uma decisão importante: SGD, loss e taxa de aprendizado NÃO mudaram — senão eu não saberia se o ganho veio da rede ou do treino."</div>
+    <div class="footer"><span>3 / 7 · Mapa das mudanças</span><span>src/config.py · src/modelos.py</span></div>
+  </section>
+
+  <!-- 4 PORQUES -->
+  <section class="slide">
+    <div class="kicker">Slide 4 · O coração da apresentação</div>
+    <h2>Por que <span class="hl">cada</span> alteração?</h2>
+    <div class="why">
+      <div class="item"><div class="n">1</div><div><b>100 → 500 amostras + ruído 0.10 → 0.20.</b> <span class="muted">Mais pontos = fronteira mais confiável; mais ruído = problema exige curva mais flexível. Sem isso, qualquer rede acertaria tudo e não haveria o que comparar.</span></div></div>
+      <div class="item"><div class="n">2</div><div><b>Split 80/20 estratificado (seed 42).</b> <span class="muted">Corrige o viés otimista do exemplo, que testava no treino. Agora acurácia é medida em 100 amostras que a rede nunca viu — comparação honesta.</span></div></div>
+      <div class="item"><div class="n">3</div><div><b>16 → 8 → 4 neurônios (+1 camada).</b> <span class="muted">Formato "funil": 1ª camada larga captura detalhes locais das luas, seguintes comprimem em abstração. ~4,4× parâmetros → mais capacidade sem explodir o custo.</span></div></div>
+      <div class="item"><div class="n">4</div><div><b>ReLU, ReLU, tanh (em vez de ReLU, tanh).</b> <span class="muted">ReLU nas duas primeiras evita saturação e mantém gradiente vivo (treino com SGD simples); tanh antes da saída dá transição suave e limitada [-1,1] — bom acabamento para a sigmoid binária, que foi mantida porque o problema continua binário.</span></div></div>
+      <div class="item"><div class="n">5</div><div><b>SGD + MSE + lr 0.1 mantidos + 200 épocas / batch 10.</b> <span class="muted">Justiça experimental. Épocas e batch só escalaram junto com o dataset (400 treino vs 100) para a rede convergir; o resto é idêntico.</span></div></div>
+    </div>
+    <div class="notes"><b>🎤 Fala (~90s — gaste seu tempo aqui):</b> passe item por item resumindo o "para quê" de cada um. Feche com: "Nada foi aleatório: dado mais difícil pede rede maior; avaliação honesta pede split; ativação foi escolhida pelo gradiente."</div>
+    <div class="footer"><span>4 / 7 · Porquês</span><span>o slide mais importante</span></div>
+  </section>
+
+  <!-- 5 RESULTADOS -->
+  <section class="slide">
+    <div class="kicker">Slide 5 · Evidência</div>
+    <h2>Resultado: <span class="hl">converge 2× mais rápido</span>, acurácia empata</h2>
+    <table>
+      <tr><th>Modelo</th><th>Params</th><th>Loss teste</th><th>Acurácia teste</th></tr>
+      <tr><td>Referência</td><td class="num">51</td><td class="num">0.0126</td><td class="num">98.00%</td></tr>
+      <tr><td><b>Proposto</b></td><td class="num"><b>225</b></td><td class="num"><b>0.0105</b></td><td class="num"><b>99.00%</b> <span class="badge ok">+1 pp</span></td></tr>
+    </table>
+    <div class="grid2" style="margin-top:12px">
+      <div class="card"><h3>⏱️ Convergência (do histórico, não "no olho")</h3><p>Loss ≤ 0.02: época <b>95 → 46</b><br>Acurácia ≥ 95%: época <b>58 → 24</b><br><span class="muted">Sem overfitting: loss de teste termina abaixo da de treino nos dois.</span></p></div>
+      <div class="card"><h3>🗺️ Fronteira de decisão</h3><p>Ambas seguem as luas. Diferença só no cruzamento (<code>x0 ∈ [-0.5, 0]</code>): o proposto faz transição mais abrupta — ali mora o ±1 pp.</p></div>
+    </div>
+    <div class="imgs">
+      <figure><img src="../figuras/04_fronteira_modelo_referencia.png" alt="Fronteira referência" onerror="this.parentElement.innerHTML='<figcaption>rode <code>python -m src.trabalho_rede_neural</code> para gerar figuras/</figcaption>'"><figcaption>Referência — fronteira suave</figcaption></figure>
+      <figure><img src="../figuras/05_fronteira_modelo_proposto.png" alt="Fronteira proposto"><figcaption>Proposto — transição mais abrupta</figcaption></figure>
+    </div>
+    <div class="notes"><b>🎤 Fala (~60s):</b> "Último run: 98% vs 99% — na prática, 1 amostra em 100. E atenção: esse ±1pp varia entre runs mesmo com seed fixa, por versão de TF/CPU. O efeito robusto é a velocidade: a rede maior atinge o mesmo patamar com metade das épocas. Fonte oficial: resultados/RESULTADOS.md auto-gerado."</div>
+    <div class="footer"><span>5 / 7 · Resultados (run 23/09 — TF 2.22)</span><span>resultados/RESULTADOS.md</span></div>
+  </section>
+
+  <!-- 6 CONCLUSAO -->
+  <section class="slide">
+    <div class="kicker">Slide 6 · Fechamento</div>
+    <h2>Conclusão: <span class="hl">maior ≠ melhor</span></h2>
+    <div class="grid2">
+      <div class="card prop"><h3>✅ O que o novo provou</h3><ul><li>Mais capacidade = convergência ~2× mais rápida sob o mesmo SGD</li><li>Engenharia reproduzível: <code>src/</code> modular, seed fixa, <code>RESULTADOS.md</code> + CSVs auto-gerados</li></ul></div>
+      <div class="card ref"><h3>⚠️ O limite</h3><ul><li>Ganho final de apenas ~1 pp — a rede simples da aula já era suficiente</li><li>Capacidade extra deixa o modelo mais sensível ao ruído na fronteira</li></ul></div>
+    </div>
+    <p style="margin-top:14px"><span class="badge warn">Para reproduzir</span> <code>.\.venv\Scripts\python.exe -m src.trabalho_rede_neural</code> → gera <code>figuras/</code> (7 PNGs) + <code>modelos/</code> + <code>resultados/</code></p>
+    <div class="notes"><b>🎤 Fala (~30s):</b> "Moral da história: aumentar neurônios e camadas acelera o treino, mas não garante acurácia melhor — nesse ruído, o simples já resolve. E todo número que mostrei é auditável no CSV por época."</div>
+    <div class="footer"><span>6 / 7 · Conclusão</span><span>Obrigado! Perguntas?</span></div>
+  </section>
+
+  <!-- 7 ROTEIRO -->
+  <section class="slide">
+    <div class="kicker">Slide 7 · Cola (não projetar — só para você)</div>
+    <h2>Roteiro de <span class="hl">5 minutos</span></h2>
+    <table>
+      <tr><th>Tempo</th><th>Slide</th><th>Falar</th></tr>
+      <tr><td>0:00–0:40</td><td>1 Capa</td><td>Pergunta do trabalho + regra: só a arquitetura muda</td></tr>
+      <tr><td>0:40–1:20</td><td>2 Referência</td><td>100 pts, sem split, 5+5, SGD 0.1/MSE</td></tr>
+      <tr><td>1:20–2:05</td><td>3 Mapa</td><td>3 grupos de mudança (dados, treino, rede)</td></tr>
+      <tr><td>2:05–3:35</td><td>4 Porquês ⭐</td><td>1 motivo por item — aqui está a nota</td></tr>
+      <tr><td>3:35–4:35</td><td>5 Resultados</td><td>98 vs 99, 2× mais rápido, fronteira no cruzamento</td></tr>
+      <tr><td>4:35–5:00</td><td>6 Conclusão</td><td>Maior ≠ melhor + como reproduzir</td></tr>
+    </table>
+    <p class="muted">Dica: se o tempo apertar, pule o slide 3 e vá direto ao 4. Se perguntarem "por que MSE e não cross-entropy?", responda: "para manter fidelidade ao exemplo da aula — trocar a loss contaminaria a comparação."</p>
+    <div class="footer"><span>7 / 7 · Roteiro</span><span>boa apresentação!</span></div>
+  </section>
+
+  <div class="dots" id="dots"></div>
+</div>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=document.getElementById('dots');
+  let i=0;
+  slides.forEach((_,k)=>{const d=document.createElement('button');d.className='dot'+(k===0?' on':'');d.title='Slide '+(k+1);d.onclick=()=>go(k);dots.appendChild(d);});
+  function go(k){i=(k+slides.length)%slides.length;slides.forEach((s,j)=>s.classList.toggle('active',j===i));[...dots.children].forEach((d,j)=>d.classList.toggle('on',j===i));window.scrollTo({top:0,behavior:'smooth'});}
+  document.getElementById('prev').onclick=()=>go(i-1);
+  document.getElementById('next').onclick=()=>go(i+1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1);}
+    if(e.key==='ArrowLeft'){go(i-1);}
+  });
+  // cronômetro simples de 5 min
+  const t0=Date.now(),el=document.getElementById('clock');
+  setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000);el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');el.style.color=s>300?'#f87171':'';},1000);
+})();
+</script>
+</body>
+</html>
